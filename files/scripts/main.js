@@ -13,9 +13,11 @@ window.onload = function()
     canvas.height = window.innerWidth >= window.innerHeight * 1.33 ?
         Math.floor(window.innerHeight * .9) : Math.floor(window.innerWidth * .75)
 
+    //abre o menu principal
     menu_config(MAIN_MENU)
 }
 
+//configuracoes iniciais para o jogo
 function initGame()
 {
     score = [0, 0]
@@ -28,12 +30,14 @@ function initGame()
     paddle_input()
 }
 
+//reinicia a partida (apos alguem pontuar)
 function resetGame()
 {
     paddle_config()
     ball_config()
 }
 
+//ciclo de jogo
 function updateGame()
 {
     paddle_movement()
@@ -42,14 +46,24 @@ function updateGame()
     draw()
 }
 
+//apos alguem pontuar
 function updateScore(player)
 {
-    if(++score[player] >= 2)
+    //caso o placar maximo seja atingido
+    if(++score[player] >= 5)
     {
+        //interrompe o updateGame()
         clearInterval(loop)
+
+        //limpa os listeners que movimentam as barras
+        removeEventListener("keydown", paddle_keydown)
+        removeEventListener("keyup", paddle_keyup)
+
+        //leva ao menu de fim de jogo
         menu_config(GAMEOVER_MENU)
     }
 
+    //recomeca a partida
     else resetGame()
 }
 
@@ -57,8 +71,6 @@ function draw()
 {
     //limpa o canvas
     render.clearRect(0, 0, canvas.width, canvas.height)
-
-    render.fillStyle = "#fafafa"
 
     //desenha a divisoria, as barras e a bola, respectivamente
     render.fillRect(Math.floor(canvas.width / 2), 0, 1, canvas.height)
@@ -70,7 +82,7 @@ function draw()
 
     //desenha o placar
     render.font = Math.floor(canvas.height * .1) + "px Sarpanch"
-    render.textAlign = "center"
+    
     render.fillText(score[0], Math.floor(canvas.width * .25), Math.floor(canvas.height * .2))
     render.fillText(score[1], Math.floor(canvas.width *.75), Math.floor(canvas.height * .2))
 }
