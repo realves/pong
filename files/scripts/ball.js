@@ -1,3 +1,4 @@
+let ball = { xPos: 0, yPos: 0, width: 0, height: 0, xSpd: 0, ySpd: 0 }
 let ballSpd, ballAngle, turn
 
 function ball_config()
@@ -38,10 +39,12 @@ function ball_movement()
     //checa a colisao com as barras (apenas com a do turno atual)
     ball_paddleCollision(paddle[turn % 2])
 
-    //garante que a bola nao saia da tela
+    //garante que a bola nao saia pelo eixo Y
     if(ball.yPos <= 0 || ball.yPos >= canvas.height - ball.height) ballAngle *= -1
 
-    if(ball.xPos <= 0 || ball.xPos >= canvas.width - ball.width) ball_config()
+    //caso a bola saia pelo eixo X
+    if(ball.xPos <= 0) updateScore(1)
+    if(ball.xPos >= canvas.width - ball.width) updateScore(0)
 }
 
 function ball_paddleCollision(paddle)

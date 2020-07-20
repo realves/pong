@@ -1,3 +1,4 @@
+let paddle = [{ xPos: 0, yPos: 0, width: 0, height: 0, spd: 0 }, { xPos: 0, yPos: 0, width: 0, height: 0, spd: 0 }]
 let paddleSpd, w, s, up, down
 
 function paddle_config()
