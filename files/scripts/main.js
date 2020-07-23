@@ -1,5 +1,5 @@
-const fps = 1000/60
-let canvas, render, score, loop
+const fps = 1000/60, CLASSIC = "classic", FRENZY = "frenzy"
+let canvas, render, score, loop, gamemode
 
 window.onload = function()
 {
@@ -18,8 +18,10 @@ window.onload = function()
 }
 
 //configuracoes iniciais para o jogo
-function initGame()
+function initGame(mode)
 {
+    gamemode = mode
+
     score = [0, 0]
 
     paddle_config()
@@ -28,13 +30,6 @@ function initGame()
     loop = setInterval(updateGame, fps)
 
     paddle_input()
-}
-
-//reinicia a partida (apos alguem pontuar)
-function resetGame()
-{
-    paddle_config()
-    ball_config()
 }
 
 //ciclo de jogo
@@ -47,10 +42,11 @@ function updateGame()
 }
 
 //apos alguem pontuar
-function updateScore(player)
+function updateScore(player, ball)
 {
     //caso o placar maximo seja atingido
-    if(++score[player] >= 5)
+    if(gamemode === CLASSIC && ++score[player] >= 5 ||
+        gamemode === FRENZY && ++score[player] >= 10)
     {
         //interrompe o updateGame()
         clearInterval(loop)
@@ -63,8 +59,8 @@ function updateScore(player)
         menu_config(GAMEOVER_MENU)
     }
 
-    //recomeca a partida
-    else resetGame()
+    //reconfigura a bola
+    else ball_reset(ball)
 }
 
 function draw()
@@ -78,11 +74,12 @@ function draw()
     render.fillRect(paddle[0].xPos, paddle[0].yPos, paddle[0].width, paddle[0].height)
     render.fillRect(paddle[1].xPos, paddle[1].yPos, paddle[1].width, paddle[1].height)
 
-    render.fillRect(ball.xPos, ball.yPos, ball.width, ball.height)
+    render.fillRect(ball[0].xPos, ball[0].yPos, ball[0].width, ball[0].height)
+    if(gamemode === FRENZY) render.fillRect(ball[1].xPos, ball[1].yPos, ball[1].width, ball[1].height)
 
     //desenha o placar
+    render.textAlign = "center"
     render.font = Math.floor(canvas.height * .1) + "px Sarpanch"
-    
     render.fillText(score[0], Math.floor(canvas.width * .25), Math.floor(canvas.height * .2))
     render.fillText(score[1], Math.floor(canvas.width *.75), Math.floor(canvas.height * .2))
 }
